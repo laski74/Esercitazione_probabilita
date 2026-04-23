@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Probabilità e gioco d'azzardo - Versione studenti</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --ink:#1f2937; --muted:#6b7280;
+      --accent:#1d4ed8; --accent2:#0f766e; --line:#dbe3ee;
+      --soft:#eef4ff; --soft2:#ecfeff; --warn:#fff7ed;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+    header{
+      background:linear-gradient(135deg,#1d4ed8,#0f766e);
+      color:#fff; padding:20px 24px 16px; position:sticky; top:0; z-index:10;
+      box-shadow:0 4px 14px rgba(0,0,0,.12);
+    }
+    header h1{margin:0 0 6px;font-size:30px}
+    .sub{opacity:.95;font-size:15px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .toolbar button{
+      border:none;border-radius:999px;padding:10px 16px;cursor:pointer;
+      background:rgba(255,255,255,.15);color:#fff;font-weight:600
+    }
+    .toolbar button.active,.toolbar button:hover{background:#fff;color:var(--accent)}
+    main{max-width:1180px;margin:22px auto;padding:0 18px 36px}
+    section.tab{display:none;animation:fade .25s ease}
+    section.tab.active{display:block}
+    @keyframes fade{from{opacity:.2;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;
+      box-shadow:0 8px 24px rgba(15,23,42,.05)
+    }
+    .span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}
+    .span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}
+    @media (max-width:900px){.span-8,.span-7,.span-6,.span-5,.span-4{grid-column:span 12}header h1{font-size:24px}}
+    h2{margin-top:0;font-size:28px;color:#0f172a} h3{margin:0 0 10px;font-size:20px;color:#0f172a}
+    p{line-height:1.55} ul,ol{line-height:1.6;padding-left:22px}
+    .pill{display:inline-block;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:700;margin:0 6px 8px 0;background:var(--soft);color:var(--accent)}
+    .pill.alt{background:var(--soft2);color:var(--accent2)} .pill.warn{background:var(--warn);color:#b45309}
+    .quote{border-left:5px solid var(--accent2);padding:12px 16px;background:#f0fdfa;border-radius:8px;margin:10px 0}
+    .problem{background:#fcfdff;border:1px solid #cfe0ff;padding:16px;border-radius:14px;margin:12px 0}
+    .formula{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:12px 14px;margin:12px 0;overflow:auto}
+    .focus{background:#eefdf8;border:1px solid #b8f0df;border-radius:14px;padding:14px 16px}
+    .big{font-size:18px;line-height:1.6}
+    .small{font-size:14px;color:var(--muted)}
+    .nav-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .nav-bottom button{border:none;background:var(--accent);color:#fff;padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:700}
+    .nav-bottom button.secondary{background:#475569}
+    table{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px}
+    th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+    th{background:#eff6ff;color:#1e3a8a}
+    .footer-note{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
+    .kbd{background:#0f172a;color:#fff;border-radius:6px;padding:2px 7px;font-size:12px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Probabilità e gioco d'azzardo</h1>
+  <div class="sub">Versione da proiettare • classe quinta superiore • laboratorio di 50 minuti</div>
+  <div class="toolbar" id="tabButtons"></div>
+</header>
+
+<main>
+  <section class="tab active" data-title="1. Avvio">
+    <div class="grid">
+      <div class="card span-8">
+        <h2>1. Domanda iniziale</h2>
+        <span class="pill">5 minuti</span>
+        <span class="pill alt">Lavoro di gruppo</span>
+        <p class="big"><strong>Se un gioco dà una possibilità di vincita apparentemente alta, è davvero vantaggioso per il giocatore?</strong></p>
+        <div class="quote">Prendete posizione in gruppo e motivate con una frase.</div>
+        <h3>Consegna</h3>
+        <ol>
+          <li>Formate gruppi da 3-4.</li>
+          <li>Scegliete un portavoce.</li>
+          <li>Scrivete: quali informazioni matematiche servono per capire se un gioco conviene?</li>
+        </ol>
+      </div>
+      <div class="card span-4">
+        <h3>Obiettivi della lezione</h3>
+        <ul>
+          <li>Probabilità condizionata</li>
+          <li>Eventi dipendenti e indipendenti</li>
+          <li>Eventi incompatibili e non incompatibili</li>
+          <li>Lettura critica di giochi reali</li>
+        </ul>
+      </div>
+    </div>
+    <div class="nav-bottom"><button onclick="prevTab()" class="secondary">◀ Scheda precedente</button><button onclick="nextTab()">Scheda successiva ▶</button></div>
+  </section>
+
+  <section class="tab" data-title="2. Caso 1">
+    <div class="grid">
+      <div class="card span-7">
+        <h2>2. Caso 1 — Gratta e vinci</h2>
+        <span class="pill">10 minuti</span>
+        <span class="pill alt">Problem solving</span>
+        <p>Un gioco promette:</p>
+        <ul>
+          <li>\(60\%\) di probabilità di vincere <strong>1 euro</strong></li>
+          <li>\(10\%\) di probabilità di vincere <strong>5 euro</strong></li>
+          <li>\(30\%\) di probabilità di non vincere nulla</li>
+        </ul>
+        <p>Il biglietto costa <strong>3 euro</strong>.</p>
+        <div class="problem">
+          <h3>Consegna ai gruppi</h3>
+          <ol>
+            <li>Definite gli eventi:
+              <ul>
+                <li>\(A=\) “vinco 1 euro”</li>
+                <li>\(B=\) “vinco 5 euro”</li>
+                <li>\(C=\) “non vinco nulla”</li>
+              </ul>
+            </li>
+            <li>\(A\) e \(B\) sono incompatibili? E \(A\) e \(C\)?</li>
+            <li>Calcolate la probabilità di “vincere qualcosa”.</li>
+            <li>Il gioco sembra conveniente? Motivate.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="card span-5">
+        <h3>Promemoria utile</h3>
+        <div class="formula">
+          \[
+          P(A\cup B)=P(A)+P(B)
+          \]
+        </div>
+        <p class="small">Questa formula vale quando gli eventi \(A\) e \(B\) sono incompatibili.</p>
+        <div class="focus">
+          <strong>Attenzione:</strong> “vincere spesso” non significa automaticamente “guadagnare”.
+        </div>
+      </div>
+    </div>
+    <div class="nav-bottom"><button onclick="prevTab()" class="secondary">◀ Scheda precedente</button><button onclick="nextTab()">Scheda successiva ▶</button></div>
+  </section>
+
+  <section class="tab" data-title="3. Caso 2">
+    <div class="grid">
+      <div class="card span-7">
+        <h2>3. Caso 2 — Roulette: rosso e pari</h2>
+        <span class="pill">12 minuti</span>
+        <span class="pill alt">Esplorazione guidata</span>
+        <p>Consideriamo la roulette europea con <strong>37 esiti</strong>: numeri da 0 a 36.</p>
+        <ul>
+          <li>\(R=\) “esce un numero rosso”</li>
+          <li>\(P=\) “esce un numero pari”</li>
+        </ul>
+        <div class="problem">
+          <h3>Consegna ai gruppi</h3>
+          <ol>
+            <li>\(R\) e \(P\) sono incompatibili?</li>
+            <li>Esistono numeri che sono sia rossi sia pari?</li>
+            <li>Che differenza c'è tra “incompatibili” e “indipendenti”?</li>
+            <li>Provate a capire se \(R\) e \(P\) sono indipendenti oppure no.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="card span-5">
+        <h3>Dati utili</h3>
+        <ul>
+          <li>I numeri rossi sono 18.</li>
+          <li>I numeri pari tra 1 e 36 sono 18.</li>
+          <li>I numeri contemporaneamente rossi e pari sono 8.</li>
+        </ul>
+        <div class="formula">
+          \[
+          P(R\cap P) \stackrel{?}{=} P(R)\cdot P(P)
+          \]
+        </div>
+        <p class="small">Per gli eventi indipendenti deve valere questa uguaglianza.</p>
+      </div>
+    </div>
+    <div class="nav-bottom"><button onclick="prevTab()" class="secondary">◀ Scheda precedente</button><button onclick="nextTab()">Scheda successiva ▶</button></div>
+  </section>
+
+  <section class="tab" data-title="4. Caso 3">
+    <div class="grid">
+      <div class="card span-8">
+        <h2>4. Caso 3 — Estrazioni successive</h2>
+        <span class="pill">13 minuti</span>
+        <span class="pill alt">Learning by doing</span>
+        <p>In un'urna ci sono <strong>10 palline</strong>: 4 rosse e 6 blu. Si estraggono <strong>2 palline senza reinserimento</strong>.</p>
+        <div class="problem">
+          <h3>Consegna ai gruppi</h3>
+          <ol>
+            <li>Calcolate la probabilità che la prima pallina sia rossa.</li>
+            <li>Calcolate la probabilità che la seconda pallina sia rossa sapendo che la prima era rossa.</li>
+            <li>Confrontate con la probabilità che la seconda sia rossa senza sapere nulla della prima.</li>
+            <li>Gli eventi sono dipendenti o indipendenti?</li>
+          </ol>
+        </div>
+      </div>
+      <div class="card span-4">
+        <h3>Formula chiave</h3>
+        <div class="formula">
+          \[
+          P(A\mid B)=\frac{P(A\cap B)}{P(B)} \qquad P(B)\neq 0
+          \]
+        </div>
+        <div class="focus">
+          <strong>Domanda guida:</strong> sapere che il primo evento è già avvenuto cambia la probabilità del secondo?
+        </div>
+      </div>
+    </div>
+    <div class="nav-bottom"><button onclick="prevTab()" class="secondary">◀ Scheda precedente</button><button onclick="nextTab()">Scheda successiva ▶</button></div>
+  </section>
+
+  <section class="tab" data-title="5. Sintesi">
+    <div class="grid">
+      <div class="card span-12">
+        <h2>5. Sintesi finale</h2>
+        <span class="pill">5 minuti</span>
+        <span class="pill alt">Discussione plenaria</span>
+        <table>
+          <thead>
+            <tr><th>Concetto</th><th>Domanda guida</th><th>Indicatore matematico</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Eventi incompatibili</td>
+              <td>Possono avvenire insieme?</td>
+              <td>\(P(A\cap B)=0\)</td>
+            </tr>
+            <tr>
+              <td>Eventi non incompatibili</td>
+              <td>Hanno casi in comune?</td>
+              <td>\(P(A\cap B)>0\)</td>
+            </tr>
+            <tr>
+              <td>Eventi indipendenti</td>
+              <td>Uno modifica l'altro?</td>
+              <td>\(P(A\cap B)=P(A)\cdot P(B)\)</td>
+            </tr>
+            <tr>
+              <td>Eventi dipendenti</td>
+              <td>Conoscere uno cambia l'altro?</td>
+              <td>\(P(A\mid B)\neq P(A)\)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card span-12">
+        <h3>Exit ticket</h3>
+        <div class="problem">
+          <ul>
+            <li><strong>A.</strong> Spiega la differenza tra eventi incompatibili e indipendenti.</li>
+            <li><strong>B.</strong> Fai un esempio di probabilità condizionata preso da uno dei problemi.</li>
+            <li><strong>C.</strong> Perché nelle estrazioni senza reinserimento gli eventi sono dipendenti?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bottom"><button onclick="prevTab()" class="secondary">◀ Scheda precedente</button><button onclick="nextTab()">Torna all'inizio ▶</button></div>
+  </section>
+
+  <div class="footer-note">Navigazione rapida: pulsanti in alto oppure tasti <span class="kbd">←</span> e <span class="kbd">→</span>.</div>
+</main>
+
+<script>
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+  const buttonBar = document.getElementById('tabButtons');
+  let current = 0;
+  function renderButtons(){
+    buttonBar.innerHTML = '';
+    tabs.forEach((tab, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = tab.dataset.title;
+      btn.className = i === current ? 'active' : '';
+      btn.onclick = () => showTab(i);
+      buttonBar.appendChild(btn);
+    });
+  }
+  function showTab(index){
+    current = (index + tabs.length) % tabs.length;
+    tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
+    renderButtons();
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(window.MathJax && window.MathJax.typesetPromise){ MathJax.typesetPromise(); }
+  }
+  function nextTab(){ showTab(current + 1); }
+  function prevTab(){ showTab(current - 1); }
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight') nextTab();
+    if(e.key === 'ArrowLeft') prevTab();
+  });
+  renderButtons();
+</script>
+</body>
+</html>
